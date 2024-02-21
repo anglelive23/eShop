@@ -1,0 +1,9 @@
+﻿global using eShop.Application.Models.Authentication;
+global using eShop.Domain.Entities;
+global using System.ComponentModel.DataAnnotations;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Reflection;
+global using MediatR;
+global using eShop.Application.Contracts;
+global using FluentValidation;
+global using Mapster;

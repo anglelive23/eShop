@@ -38,10 +38,14 @@ namespace eShop.Infrastructure
             });
             #endregion
 
+            #region Repositories
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
             services.AddScoped<ISalesRepository, SalesRepository>();
             services.AddScoped<ISalesOrdersService, SalesOrdersService>();
             services.AddScoped<IPriceCalculator, PriceCalculator>();
+            services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            #endregion
 
             return services;
         }

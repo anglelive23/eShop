@@ -17,3 +17,7 @@ global using eShop.Application.Exceptions;
 global using System.Net;
 global using System.Text;
 global using eShop.API.Middlewares;
+global using eShop.Application.Features.Currencies.Command.CacheCurrencies;
+global using eShop.Application.Features.Currencies.Queries.GetCurrencyExchangeDetails;
+global using eShop.Application.Features.Currencies.Queries.GetCurrencyList;
+global using eShop.Application.Models.Dtos;

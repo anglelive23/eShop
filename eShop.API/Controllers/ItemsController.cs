@@ -63,7 +63,7 @@ namespace eShop.API.Controllers
         #endregion
 
         #region PUT
-        [HttpPut("tweets({key})")]
+        [HttpPut("items({key})")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateItem(int key, [FromBody] UpdateItemDto updateItemDto)

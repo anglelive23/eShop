@@ -1,12 +1,20 @@
+using eShop.Application.Models;
+using Microsoft.AspNetCore.OData;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<LogActivityFilter>();
+}).AddOData(options =>
+{
+    options.AddRouteComponents("api/odata", new eShopEntityDataModel().GetEdmModel()).Select().Filter().OrderBy().Expand().SetMaxTop(1000).Count();
 });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.OperationFilter<SwaggerIgnoreOdataOptionsFilter>();
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "eShop.API", Version = "v1" });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

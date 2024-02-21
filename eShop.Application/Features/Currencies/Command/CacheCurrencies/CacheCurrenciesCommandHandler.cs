@@ -1,35 +1,30 @@
 ﻿using eShop.Application.Models;
+using eShop.Application.Models.Dtos;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
-using System.Text.Json;
 
 namespace eShop.Application.Features.Currencies.Command.CacheCurrencies
 {
-    public class CacheCurrenciesCommandHandler(IDistributedCache cache, IConfiguration configuration) : IRequestHandler<CacheCurrenciesCommand, bool>
+    public class CacheCurrenciesCommandHandler(ICacheService cache, IConfiguration configuration) : IRequestHandler<CacheCurrenciesCommand, List<CurrencyDto>>
     {
-        public async Task<bool> Handle(CacheCurrenciesCommand request, CancellationToken cancellationToken)
+        public async Task<List<CurrencyDto>> Handle(CacheCurrenciesCommand request, CancellationToken cancellationToken)
         {
-            var cachedItems = await cache.GetStringAsync(Constants.CurrenciesKey, cancellationToken);
-            if (!string.IsNullOrEmpty(cachedItems))
-                return false;
-
-            var exchangeRates = configuration.GetSection("Currencies:ExchangeRates");
-            var currencies = new List<object>();
-            currencies.AddRange(exchangeRates.GetChildren().Select(x => new
-            {
-                Key = x.Key,
-                Value = x.Value,
-            }));
+            var validator = new CacheCurrenciesCommandValidator();
+            await validator.ValidateAndThrowAsync(request, cancellationToken);
 
             var defaultExpireDateConfig = configuration
                 .GetSection(Constants.DefaultExpireConfig).Value;
             double.TryParse(defaultExpireDateConfig, out var expireDate);
 
-            await cache.SetStringAsync(Constants.CurrenciesKey,
-            JsonSerializer.Serialize(currencies),
-                 new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(expireDate) },
-                cancellationToken);
-            return true;
+            var currencies = await cache
+                .GetAsync(Constants.CurrenciesKey,
+                 () =>
+                {
+                    return Task.FromResult(request.CurrenciesExchangeDto);
+                }, new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(expireDate) }
+                , cancellationToken);
+
+            return currencies.CurrencyDtos;
         }
     }
 }

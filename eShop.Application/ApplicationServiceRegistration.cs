@@ -10,18 +10,20 @@ namespace eShop.Application
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             #endregion
 
-            //#region AutoMapper
-            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            //#endregion
+            #region AutoMapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            #endregion
 
-            //#region HttpContextAccessor
-            //services.AddHttpContextAccessor();
-            //#endregion
+            #region HttpContextAccessor
+            services.AddHttpContextAccessor();
+            #endregion
 
+            #region Redis
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration["Redis:ConnectionString"];
             });
+            #endregion
 
             return services;
         }

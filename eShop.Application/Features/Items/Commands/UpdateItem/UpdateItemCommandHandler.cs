@@ -13,7 +13,7 @@ namespace eShop.Application.Features.Items.Commands.UpdateItem
             var checkUpdate = await repo
                 .UpdateItemAsync(request.Key, request.ItemDto.Adapt<Item>());
             if (checkUpdate != null)
-                await mediator.Publish(new ItemUpdatedNotification { Key = "tweet" }, cancellationToken);
+                await mediator.Publish(new ItemUpdatedNotification { Key = "item" }, cancellationToken);
             return checkUpdate.Adapt<ItemDto>();
         }
     }

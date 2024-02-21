@@ -1,6 +1,6 @@
 ﻿namespace eShop.Application.Features.Items.Notifications
 {
-    public class CacheInvalidationTweetHandler(ICacheService cache) : INotificationHandler<ItemCreatedNotification>
+    public class CacheInvalidationItemHandler(ICacheService cache) : INotificationHandler<ItemCreatedNotification>
         , INotificationHandler<ItemUpdatedNotification>
         , INotificationHandler<ItemDeletedNotification>
     {

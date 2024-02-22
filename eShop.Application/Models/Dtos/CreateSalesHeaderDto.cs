@@ -4,6 +4,7 @@
     {
         public string CustomerId { get; set; }
         public string? DiscountPromoCode { get; set; }
+        public string CurrencyCode { get; set; }
         public List<CreateSalesLineDto> SalesLines { get; set; }
     }
 }

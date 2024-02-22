@@ -13,9 +13,6 @@
             builder.Property(u => u.QTY)
                 .IsRequired();
 
-            builder.Property(u => u.CurrencyCode)
-                .IsRequired();
-
             builder.Property(u => u.Price)
                 .IsRequired()
                 .HasPrecision(18, 2);

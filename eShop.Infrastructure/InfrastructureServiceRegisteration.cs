@@ -1,6 +1,4 @@
-﻿using eShop.Infrastructure.Repositories;
-
-namespace eShop.Infrastructure
+﻿namespace eShop.Infrastructure
 {
     public static class InfrastructureServiceRegisteration
     {

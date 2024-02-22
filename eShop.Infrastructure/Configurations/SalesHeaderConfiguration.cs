@@ -18,6 +18,9 @@
                 .HasPrecision(18, 2)
                 .IsRequired();
 
+            builder.Property(u => u.CurrencyCode)
+                .IsRequired();
+
             builder.Property(u => u.IsDeleted)
                 .HasDefaultValue(false);
         }

@@ -1,12 +1,4 @@
-﻿using eShop.Application.Features.Items.Commands.CreateItem;
-using eShop.Application.Features.Items.Commands.DeleteItem;
-using eShop.Application.Features.Items.Commands.UpdateItem;
-using eShop.Application.Features.Items.Queries.GetItemDetails;
-using eShop.Application.Features.Items.Queries.GetItemsList;
-using Microsoft.AspNetCore.OData.Query;
-using Microsoft.AspNetCore.OData.Routing.Controllers;
-
-namespace eShop.API.Controllers
+﻿namespace eShop.API.Controllers
 {
     [Route("api/odata")]
     public class ItemsController(IMediator mediator) : ODataController

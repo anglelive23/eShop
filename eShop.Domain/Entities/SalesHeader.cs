@@ -9,10 +9,14 @@ namespace eShop.Domain.Entities
         public DateTime? CloseDate { get; set; }
         public Status Status { get; set; }
         public ApplicationUser? Customer { get; set; }
-        public string CustomerId { get; set; } // --> needed
-        public string? DiscountPromoCode { get; set; } // --> needed but optional
+        public string CustomerId { get; set; }
+        public string? DiscountPromoCode { get; set; }
         public decimal? DiscountValue { get; set; }
         public decimal TotalPrice { get; set; }
-        public List<SalesLine>? SalesLines { get; set; } // --> needed
+        public string CurrencyCode { get; set; }
+        public int ExchangeRate { get; set; }
+        public decimal ForignPrice => TotalPrice / ExchangeRate;
+
+        public List<SalesLine>? SalesLines { get; set; }
     }
 }

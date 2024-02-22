@@ -1,7 +1,4 @@
-﻿using eShop.Application.Exceptions;
-using Microsoft.Data.SqlClient;
-
-namespace eShop.Infrastructure.Repositories
+﻿namespace eShop.Infrastructure.Repositories
 {
     public class ItemRepository : BaseRepository<Item>, IItemRepository
     {

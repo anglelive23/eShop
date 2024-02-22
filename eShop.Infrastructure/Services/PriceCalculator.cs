@@ -1,10 +1,11 @@
-﻿using eShop.Application.Models.Dtos;
+﻿using eShop.Application.Models;
+using eShop.Application.Models.Dtos;
 
 namespace eShop.Infrastructure.Services
 {
-    public class PriceCalculator(eShopContext context, IConfiguration configuration) : IPriceCalculator
+    public class PriceCalculator(eShopContext context, IConfiguration configuration, ICacheService cache) : IPriceCalculator
     {
-        public async Task<decimal> CalculateOrderPrice(CreateSalesHeaderDto orderDto)
+        public async Task<(decimal, int)> CalculateOrderPrice(CreateSalesHeaderDto orderDto)
         {
             decimal price = 0;
             // this dict contain item id as key, quantity as value
@@ -16,17 +17,37 @@ namespace eShop.Infrastructure.Services
                 price += itemPrice;
             }
 
-            var test = configuration.GetSection("PromoCode:VS02").Key;
-            if (!string.IsNullOrEmpty(orderDto.DiscountPromoCode) && string.Equals(orderDto.DiscountPromoCode, configuration.GetSection("PromoCode:VS02").Key))
+            // compare price against entered CurrencyCode
+            (price, int exchageRate) = await GetPriceForGivenCurrency(orderDto.CurrencyCode, price);
+
+            // checks promo code
+            var promoCodeSection = configuration.GetSection(Constants.PromoCode);
+            if (!string.IsNullOrEmpty(orderDto.DiscountPromoCode) && string.Equals(orderDto.DiscountPromoCode, promoCodeSection.Key))
             {
-                decimal.TryParse(configuration.GetSection("PromoCode:VS02").Value, out decimal copoun);
+                decimal.TryParse(promoCodeSection.Value, out decimal copoun);
                 price -= copoun;
-                return price;
+                return (price, exchageRate);
             }
 
-            return price;
+            return (price, exchageRate);
         }
+        public async Task<(decimal, int)> GetPriceForGivenCurrency(string orderCurrencyCode, decimal orderPrice)
+        {
+            // CASE: order currency = main currency
+            var mainCurrency = configuration.GetSection(Constants.DefaultCurrency).Value;
+            if (string.Equals(mainCurrency, orderCurrencyCode, StringComparison.OrdinalIgnoreCase))
+                return (orderPrice, 1);
 
+            // Get the rate of the given currency
+            var currencies = await cache
+                .GetAsync<CreateCurrenciesExchangeDto>(Constants.CurrenciesKey);
+            var currency = currencies.CurrencyDtos
+                .FirstOrDefault(c => c.Key == orderCurrencyCode);
+            if (currency is null)
+                throw new ApplicationException($"Currency with code {orderCurrencyCode} not found on cache server!");
+
+            return (orderPrice / currency.Value, currency.Value);
+        }
         public async IAsyncEnumerable<decimal> GetItemPrices(Dictionary<int, int> itemsDect)
         {
             foreach (var itemId in itemsDect.Keys)

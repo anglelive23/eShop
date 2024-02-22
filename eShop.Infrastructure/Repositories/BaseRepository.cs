@@ -1,18 +1,19 @@
-﻿using eShop.Application.Exceptions;
-using Microsoft.Data.SqlClient;
-using System.Linq.Expressions;
-
-namespace eShop.Infrastructure.Repositories
+﻿namespace eShop.Infrastructure.Repositories
 {
     public class BaseRepository<T> : IAsyncRepository<T> where T : class
     {
+        #region  Fileds and Properties
         public readonly eShopContext _context;
+        #endregion
 
+        #region Constructors
         public BaseRepository(eShopContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+        #endregion
 
+        #region Interface Implementation
         public IQueryable<T> GetAll(Expression<Func<T, bool>>? predicate = null)
         {
             try
@@ -49,5 +50,6 @@ namespace eShop.Infrastructure.Repositories
                 throw new DataFailureException(ex.Message);
             }
         }
+        #endregion
     }
 }

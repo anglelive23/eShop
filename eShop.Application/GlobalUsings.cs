@@ -7,3 +7,5 @@ global using MediatR;
 global using eShop.Application.Contracts;
 global using FluentValidation;
 global using Mapster;
+global using eShop.Application.Models.Dtos;
+global using Microsoft.EntityFrameworkCore;

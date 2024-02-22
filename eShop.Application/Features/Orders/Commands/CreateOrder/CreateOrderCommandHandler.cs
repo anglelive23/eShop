@@ -1,6 +1,4 @@
-﻿using eShop.Application.Models.Dtos;
-
-namespace eShop.Application.Features.Orders.Commands.CreateOrder
+﻿namespace eShop.Application.Features.Orders.Commands.CreateOrder
 {
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, SalesHeaderDto?>
     {
@@ -15,6 +13,7 @@ namespace eShop.Application.Features.Orders.Commands.CreateOrder
         }
         #endregion
 
+        #region Interface Implementation
         public async Task<SalesHeaderDto?> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var order = await _salesService
@@ -25,5 +24,6 @@ namespace eShop.Application.Features.Orders.Commands.CreateOrder
 
             return order.Adapt<SalesHeaderDto>();
         }
+        #endregion
     }
 }

@@ -1,41 +1,47 @@
-﻿using eShop.Application.Models.Dtos;
+﻿using eShop.Application.Models;
+using eShop.Application.Models.Dtos;
 
 namespace eShop.Infrastructure.Services
 {
-    public class SalesOrdersService(ISalesRepository repo, eShopContext context, IPriceCalculator priceCalculator, IConfiguration configuration) : ISalesOrdersService
+    public class SalesOrdersService(ISalesRepository repo, IItemRepository itemRepo, IPriceCalculator priceCalculator, IConfiguration configuration) : ISalesOrdersService
     {
         #region Interface Implementation
         public async Task<SalesHeader> AddSalesHeaderAsync(CreateSalesHeaderDto salesHeaderDto)
         {
-            // calc total price
-            var orderPrice = await priceCalculator
+            var (orderPrice, exchageRate) = await priceCalculator
                 .CalculateOrderPrice(salesHeaderDto);
 
-            // form the object to be added to db
             var order = new SalesHeader
             {
                 RequestDate = DateTime.UtcNow,
                 CustomerId = salesHeaderDto.CustomerId,
                 DiscountPromoCode = salesHeaderDto.DiscountPromoCode,
-                DiscountValue = decimal.Parse(configuration.GetSection("PromoCode:VS02").Value!),
+                DiscountValue = string.IsNullOrEmpty(salesHeaderDto.DiscountPromoCode) ? 0 : decimal.Parse(configuration.GetSection(Constants.PromoCode).Value!),
                 Status = Status.Open,
                 TotalPrice = orderPrice,
-                // Map SalesLineDto to SalesLine
+                CurrencyCode = salesHeaderDto.CurrencyCode,
+                ExchangeRate = exchageRate,
                 SalesLines = salesHeaderDto.SalesLines.Select(line => new SalesLine
                 {
                     ItemId = line.ItemId,
-                    CurrencyCode = line.CurrencyCode,
                     QTY = line.QTY,
-                    // price
-
-                    // exchange rate
+                    Price = GetItemPrice(line.ItemId) * line.QTY
                 }).ToList(),
             };
 
-            // call db and save the object
             var checkAdd = await repo
                 .AddSalesHeaderAsync(order);
             return checkAdd;
+        }
+        #endregion
+
+        #region Helper Methods
+        public decimal GetItemPrice(int itemId)
+        {
+            var item = itemRepo
+                .GetAll(i => i.Id == itemId)
+                .FirstOrDefault();
+            return item!.Price;
         }
         #endregion
     }

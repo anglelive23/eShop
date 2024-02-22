@@ -1,12 +1,13 @@
-﻿using eShop.Application.Models.Dtos;
-
-namespace eShop.Application.Features.Orders.Commands.CreateOrder
+﻿namespace eShop.Application.Features.Orders.Commands.CreateOrder
 {
     public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
     {
         public CreateOrderCommandValidator()
         {
             RuleFor(o => o.CreateSalesDto.CustomerId)
+                .NotEmpty().WithMessage("{PropertyName} is required!");
+
+            RuleFor(l => l.CreateSalesDto.CurrencyCode)
                 .NotEmpty().WithMessage("{PropertyName} is required!");
 
             RuleFor(o => o.CreateSalesDto.DiscountPromoCode)
@@ -26,9 +27,6 @@ namespace eShop.Application.Features.Orders.Commands.CreateOrder
         public SalesLineValidator()
         {
             RuleFor(l => l.ItemId)
-                .NotEmpty().WithMessage("{PropertyName} is required!");
-
-            RuleFor(l => l.CurrencyCode)
                 .NotEmpty().WithMessage("{PropertyName} is required!");
 
             RuleFor(l => l.QTY)

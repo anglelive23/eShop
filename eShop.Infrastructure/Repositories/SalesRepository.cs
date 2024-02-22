@@ -1,11 +1,10 @@
-﻿using eShop.Application.Exceptions;
-using Microsoft.Data.SqlClient;
-
-namespace eShop.Infrastructure.Repositories
+﻿namespace eShop.Infrastructure.Repositories
 {
     public class SalesRepository : BaseRepository<SalesHeader>, ISalesRepository
     {
+        #region Constructors
         public SalesRepository(eShopContext context) : base(context) { }
+        #endregion
 
         #region POST
         public async Task<SalesHeader> AddSalesHeaderAsync(SalesHeader salesHeader)

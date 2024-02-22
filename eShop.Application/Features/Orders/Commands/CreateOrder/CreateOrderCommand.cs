@@ -1,6 +1,4 @@
-﻿using eShop.Application.Models.Dtos;
-
-namespace eShop.Application.Features.Orders.Commands.CreateOrder
+﻿namespace eShop.Application.Features.Orders.Commands.CreateOrder
 {
     public class CreateOrderCommand : IRequest<SalesHeaderDto?>
     {

@@ -2,11 +2,17 @@
 {
     public class eShopContext : IdentityDbContext<ApplicationUser>
     {
+        #region Constructors
         public eShopContext(DbContextOptions<eShopContext> options) : base(options) { }
+        #endregion
+
+        #region DBSets
         public DbSet<Item> Items { get; set; }
         public DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
         public DbSet<SalesLine> SalesLines { get; set; }
         public DbSet<SalesHeader> SalesHeaders { get; set; }
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(eShopContext).Assembly);

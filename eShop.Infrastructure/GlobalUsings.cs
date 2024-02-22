@@ -17,3 +17,7 @@ global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Security.Cryptography;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using eShop.Application.Exceptions;
+global using Microsoft.Data.SqlClient;
+global using System.Linq.Expressions;
+global using eShop.Infrastructure.Repositories;

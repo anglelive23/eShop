@@ -1,6 +1,6 @@
 ﻿namespace eShop.Application.Contracts
 {
-    public interface ISalesRepository
+    public interface ISalesRepository : IAsyncRepository<SalesHeader>
     {
         #region POST
         Task<SalesHeader> AddSalesHeaderAsync(SalesHeader salesHeader);

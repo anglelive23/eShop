@@ -4,6 +4,5 @@
     {
         public int ItemId { get; set; }
         public int QTY { get; set; }
-        public string CurrencyCode { get; set; }
     }
 }

@@ -1,9 +1,7 @@
-﻿using eShop.Application.Models.Dtos;
-
-namespace eShop.Application.Contracts
+﻿namespace eShop.Application.Contracts
 {
     public interface IPriceCalculator
     {
-        Task<decimal> CalculateOrderPrice(CreateSalesHeaderDto orderDto);
+        Task<(decimal, int)> CalculateOrderPrice(CreateSalesHeaderDto orderDto);
     }
 }
